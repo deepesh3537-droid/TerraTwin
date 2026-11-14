@@ -57,7 +57,7 @@ Basic Pytest coverage for **health, catalog, region, and placeholder analysis ro
 | DB-03 | Seed script | Inserts demo-only records | Passed |
 | DB-04 | App runs with **empty** catalog (seed not run) | No crash; empty states | Passed |
 | DB-05 | CRS stored with each geometry/footprint | CRS field present; never silently EPSG:4326 for Moon/Mars | Passed |
-| DB-06 | `local_path` values | Relative to data root, never absolute | Not run |
+| DB-06 | `local_path` values | Relative to data root, never absolute | Passed |
 
 ## 4. Frontend Checks
 
@@ -88,11 +88,11 @@ Test every page at:
 - [x] 1440px
 
 ## 6. Accessibility Checklist
-- [ ] Keyboard navigation (sidebar, selectors, toggles, inspector)
-- [ ] Visible focus states
-- [ ] Form labels and field-linked errors
-- [ ] Contrast acceptable on dark theme
-- [ ] Status not conveyed by color alone
+- [x] Keyboard navigation (sidebar, selectors, toggles, inspector)
+- [x] Visible focus states
+- [x] Form labels and field-linked errors
+- [x] Contrast acceptable on dark theme
+- [x] Status not conveyed by color alone
 
 ## 7. Fresh-Clone / Handoff Checks (teammate readiness)
 

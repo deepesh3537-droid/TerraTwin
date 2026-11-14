@@ -67,13 +67,13 @@ Legend: `[ ]` not started · `[x]` done
 - [x] TASK-049: Frontend checks FE-01 to FE-16 and responsive checklist (375 / 768 / 1440 px)
 
 ## Phase 6: Documentation & Validation
-- [ ] TASK-050: Root `README.md` with exact Windows PowerShell commands (prereqs, DB, venv, migrate, seed, backend, frontend, URLs, tests/build); record assumptions
-- [ ] TASK-051: `docs/api-contracts.md` (consistent with OpenAPI)
-- [ ] TASK-052: `docs/data-dictionary.md` (body IDs, fields, categories, units/CRS, missing-data conventions)
-- [ ] TASK-053: `docs/team-ownership.md`
-- [ ] TASK-054: `docs/dataset-registration.md` (inspect → provenance/license → units/CRS → store raw → manifest → preprocess → register; no assumed formats)
-- [ ] TASK-055: Run backend tests and frontend production build; fix errors
-- [ ] TASK-056: Update `MEMORY.md`, `DECISIONS.md`, `TEST_PLAN.md` statuses with real results
+- [x] TASK-050: Root `README.md` with exact Windows PowerShell commands (prereqs, DB, venv, migrate, seed, backend, frontend, URLs, tests/build); record assumptions
+- [x] TASK-051: `docs/api-contracts.md` (consistent with OpenAPI)
+- [x] TASK-052: `docs/data-dictionary.md` (body IDs, fields, categories, units/CRS, missing-data conventions)
+- [x] TASK-053: `docs/team-ownership.md`
+- [x] TASK-054: `docs/dataset-registration.md` (inspect → provenance/license → units/CRS → store raw → manifest → preprocess → register; no assumed formats)
+- [x] TASK-055: Run backend tests and frontend production build; fix errors
+- [x] TASK-056: Update `MEMORY.md`, `DECISIONS.md`, `TEST_PLAN.md` statuses with real results
 
 ## Phase 7: Handoff Readiness (all must pass before distributing)
 **Run and setup**

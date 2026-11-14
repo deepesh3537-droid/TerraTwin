@@ -6,7 +6,7 @@
 **Last updated:** 2026-11-14
 
 ## Current Status
-Phase 5 (Frontend Integration) completed and verified. Typed API client configured with centralized Axios instance and error envelope normalization; Data Catalog page with filter and provenance drawer implemented; Planetary Context Provider wired across shell and features; MapLibre GL adapter and `PlanetaryMap` component boundary integrated with offline Earth fallback canvas and Moon/Mars `NotConfiguredState`; Layer panel and Region list/inspector wired to backend API; Overview page wired to system telemetry and counts with offline detection; Analysis pages (Comparison, Analog Finder, Suitability, Rover Lab) wired to API contracts with honest HTTP 501 handling and zero fabricated scores; all FE-01 to FE-16 checks verified; production build passing cleanly.
+Phase 6 (Documentation & Validation) completed and verified. Root `README.md` updated with exact verified Windows PowerShell setup and run commands; `docs/api-contracts.md` generated documenting all endpoints and error envelopes; `docs/data-dictionary.md` authored with canonical body IDs, categories, physical units, schema tables, and missing data rules; `docs/team-ownership.md` established with 3-member ownership boundaries, Git workflow, and scientific review checklist; `docs/dataset-registration.md` created with 7-step data ingestion protocol; backend tests (22/22) and frontend production build passing cleanly.
 
 ## Completed
 - Phase 0: Planning & Documentation (TASK-000, TASK-000a, TASK-000b)
@@ -14,23 +14,21 @@ Phase 5 (Frontend Integration) completed and verified. Typed API client configur
 - Phase 2: Backend Foundation (TASK-010 to TASK-018)
 - Phase 3: API Contracts (TASK-020 to TASK-029)
 - Phase 4: Frontend Foundation (TASK-030 to TASK-036)
-- Phase 5: Frontend Integration:
-  - TASK-040: Typed API client (`apiClient.ts`, `endpoints/`) + TypeScript types matching backend schemas.
-  - TASK-041: Catalog page: list, filter (planet/category/status), search, and detail drawer with complete scientific provenance.
-  - TASK-042: Planet selector + `PlanetaryProvider` context hook propagating body state.
-  - TASK-043: `PlanetaryMap` + `PlanetaryMapAdapter` interface + `MapLibreAdapter` with offline neutral canvas for Earth, and explicit `NotConfiguredState` for Moon/Mars (ADR-006).
-  - TASK-044: Layer panel connected to backend (`/layers`); unavailable layers disabled with "Not Renderable" badge.
-  - TASK-045: Region list/search + `RegionInspector` showing CRS, footprint, and honest "not yet computed" empty state for uncomputed characteristics (never rendered as 0).
-  - TASK-046: Overview page showing live system info, readiness, counts, and offline retry banner.
-  - TASK-047: Compare, Analog Finder, Suitability, Rover Lab, and Methodology pages wired to backend contracts; forms submit to API, catch HTTP 501, and display friendly status with zero fabricated scores (FE-10, FE-11).
-  - TASK-048: Loading, empty, and error states handled across all views.
-  - TASK-049: Frontend checks FE-01 to FE-16 verified; responsive checklist (375px, 768px, 1440px) verified; production build passing (`npm run build`).
+- Phase 5: Frontend Integration (TASK-040 to TASK-049)
+- Phase 6: Documentation & Validation:
+  - TASK-050: Root `README.md` with exact Windows PowerShell setup/run commands, prerequisites, test instructions, and verified URLs.
+  - TASK-051: `docs/api-contracts.md` formal specification matching OpenAPI schema.
+  - TASK-052: `docs/data-dictionary.md` establishing planetary IDs, categories, units, database dictionary, and missing data conventions.
+  - TASK-053: `docs/team-ownership.md` defining 3-member responsibilities, branch strategy, and scientific review checklist.
+  - TASK-054: `docs/dataset-registration.md` documenting 7-step ingestion protocol from raw data to database registration.
+  - TASK-055: Automated validation: backend tests (22/22 passed in 0.60s) and frontend production build (`npm run build`, 1579 modules transformed in 10.46s, code 0).
+  - TASK-056: Updated `MEMORY.md`, `DECISIONS.md`, and `TEST_PLAN.md` with real verification results.
 
 ## Current Task
-Phase 5 completed and verified. Awaiting authorization to begin Phase 6: Documentation & Validation (`TASK-050` through `TASK-056`).
+Phase 6 completed and verified. Awaiting authorization to begin Phase 7: Handoff Readiness (`TASK-057` through `TASK-060` / handoff checklist).
 
 ## Not Verified / Not Done
-- TASK-007 / DB-01: PostGIS live container startup (user will install Docker Desktop manually).
+- TASK-007 / DB-01: PostGIS live container startup (pending user's manual Docker Desktop installation).
 - Real NASA dataset ingestion (Phase 8 post-handoff).
 
 ## Known Issues / Open Items
@@ -41,4 +39,4 @@ Phase 5 completed and verified. Awaiting authorization to begin Phase 6: Documen
 - Uppercase doc filenames confirmed (TASK-000b).
 
 ## Next Step
-Obtain owner approval to begin Phase 6: Documentation & Validation (TASK-050).
+Obtain owner approval to begin Phase 7: Handoff Readiness.
