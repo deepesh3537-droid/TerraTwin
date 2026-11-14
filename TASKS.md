@@ -46,13 +46,13 @@ Legend: `[ ]` not started · `[x]` done
 - [x] TASK-029: Backend tests BE-01 to BE-21 (`TEST_PLAN.md`) and run them
 
 ## Phase 4: Frontend Foundation
-- [ ] TASK-030: Vite + React + TypeScript + Tailwind setup
-- [ ] TASK-031: Router with all 8 routes
-- [ ] TASK-032: Application shell (sidebar, top bar, main area)
-- [ ] TASK-033: Shared state components: loading, empty, error, not-implemented, not-configured
-- [ ] TASK-034: Page placeholders for all pages
-- [ ] TASK-035: Decide HTTP client (Axios vs fetch) and record in `DECISIONS.md`
-- [ ] TASK-036: Finalize design tokens with owner (`DESIGN.md`)
+- [x] TASK-030: Vite + React + TypeScript + Tailwind setup
+- [x] TASK-031: Router with all 8 routes
+- [x] TASK-032: Application shell (sidebar, top bar, main area)
+- [x] TASK-033: Shared state components: loading, empty, error, not-implemented, not-configured
+- [x] TASK-034: Page placeholders for all pages
+- [x] TASK-035: Decide HTTP client (Axios vs fetch) and record in `DECISIONS.md`
+- [x] TASK-036: Finalize design tokens with owner (`DESIGN.md`)
 
 ## Phase 5: Frontend Integration
 - [ ] TASK-040: Typed API client (`apiClient.ts`, `endpoints/`) + TS types matching schemas

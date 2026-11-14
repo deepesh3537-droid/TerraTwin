@@ -63,8 +63,8 @@ Basic Pytest coverage for **health, catalog, region, and placeholder analysis ro
 
 | ID | Check | Expected | Status |
 |---|---|---|---|
-| FE-01 | `npm run build` | Production build passes | Not run |
-| FE-02 | Shell and navigation | Sidebar/top bar work; all 8 routes load | Not run |
+| FE-01 | `npm run build` | Production build passes | Passed |
+| FE-02 | Shell and navigation | Sidebar/top bar work; all 8 routes load | Passed |
 | FE-03 | Overview | Shows status and counts, or empty state | Not run |
 | FE-04 | Explorer planet selector | Earth/Moon/Mars; state shared by map, layers, regions, inspector | Not run |
 | FE-05 | Moon/Mars map | Explicit "not configured" state; no incorrect imagery | Not run |
