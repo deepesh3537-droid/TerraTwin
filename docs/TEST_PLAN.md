@@ -26,10 +26,10 @@ Basic Pytest coverage for **health, catalog, region, and placeholder analysis ro
 
 | ID | Area | Test | Expected | Status |
 |---|---|---|---|---|
-| BE-01 | Health | `GET /health` | `200`, process healthy | Not run |
-| BE-02 | Health | `GET /api/v1/health/ready` with DB up | `200`, DB connected | Not run |
-| BE-03 | Health | Ready endpoint with DB unreachable | Reports failure honestly (not "ok") | Not run |
-| BE-04 | System | `GET /api/v1/system/info` | Version + module readiness | Not run |
+| BE-01 | Health | `GET /health` | `200`, process healthy | Passed |
+| BE-02 | Health | `GET /api/v1/health/ready` with DB up | `200`, DB connected | Passed |
+| BE-03 | Health | Ready endpoint with DB unreachable | Reports failure honestly (not "ok") | Passed |
+| BE-04 | System | `GET /api/v1/system/info` | Version + module readiness | Passed |
 | BE-05 | Planets | `GET /api/v1/planets` | Exactly `earth`, `moon`, `mars` | Not run |
 | BE-06 | Planets | `GET /api/v1/planets/unknown` | `404` + error envelope | Not run |
 | BE-07 | Datasets | List with empty catalog | `200`, empty list, pagination fields | Not run |
@@ -54,9 +54,9 @@ Basic Pytest coverage for **health, catalog, region, and placeholder analysis ro
 |---|---|---|---|
 | DB-01 | Compose starts PostGIS | Container healthy | Not run |
 | DB-02 | `alembic upgrade head` on empty DB | Succeeds | Not run |
-| DB-03 | Seed script | Inserts demo-only records | Not run |
+| DB-03 | Seed script | Inserts demo-only records | Passed |
 | DB-04 | App runs with **empty** catalog (seed not run) | No crash; empty states | Not run |
-| DB-05 | CRS stored with each geometry/footprint | CRS field present; never silently EPSG:4326 for Moon/Mars | Not run |
+| DB-05 | CRS stored with each geometry/footprint | CRS field present; never silently EPSG:4326 for Moon/Mars | Passed |
 | DB-06 | `local_path` values | Relative to data root, never absolute | Not run |
 
 ## 4. Frontend Checks

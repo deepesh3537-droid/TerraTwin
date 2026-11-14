@@ -23,15 +23,15 @@ Legend: `[ ]` not started · `[x]` done
 - [ ] TASK-007: Verify PostGIS container starts (Docker Desktop not installed on host)
 
 ## Phase 2: Backend Foundation
-- [ ] TASK-010: Decide dependency approach (pyproject vs requirements) and record in `DECISIONS.md`
-- [ ] TASK-011: FastAPI app skeleton (`main.py`, `api/router.py`, versioned prefix)
-- [ ] TASK-012: Settings via Pydantic (`core/config.py`), logging, centralized errors (`core/errors.py` incl. NotImplemented handler)
-- [ ] TASK-013: Database session/base (`core/database.py`, `db/base.py`, `db/session.py`)
-- [ ] TASK-014: SQLAlchemy models: Planet, Dataset, Layer, Region, AnalysisRun (CRS stored with geometry)
-- [ ] TASK-015: Alembic setup + initial migration (enable PostGIS extension, create tables)
-- [ ] TASK-016: Seed script: `earth`, `moon`, `mars` + minimal demo records (`is_demo: true`, no invented values)
-- [ ] TASK-017: Health endpoints: `/health`, `/api/v1/health/ready`, `/api/v1/system/info`
-- [ ] TASK-018: Verify migration + seed + backend start
+- [x] TASK-010: Decide dependency approach (pyproject vs requirements) and record in `DECISIONS.md`
+- [x] TASK-011: FastAPI app skeleton (`main.py`, `api/router.py`, versioned prefix)
+- [x] TASK-012: Settings via Pydantic (`core/config.py`), logging, centralized errors (`core/errors.py` incl. NotImplemented handler)
+- [x] TASK-013: Database session/base (`core/database.py`, `db/base.py`, `db/session.py`)
+- [x] TASK-014: SQLAlchemy models: Planet, Dataset, Layer, Region, AnalysisRun (CRS stored with geometry)
+- [x] TASK-015: Alembic setup + initial migration (enable PostGIS extension, create tables)
+- [x] TASK-016: Seed script: `earth`, `moon`, `mars` + minimal demo records (`is_demo: true`, no invented values)
+- [x] TASK-017: Health endpoints: `/health`, `/api/v1/health/ready`, `/api/v1/system/info`
+- [x] TASK-018: Verify migration + seed + backend start
 
 ## Phase 3: API Contracts
 - [ ] TASK-020: Pydantic schemas (common, planet, dataset, layer, region, analysis) incl. pagination + error envelope
