@@ -9,6 +9,8 @@ interface PlanetaryContextType {
   loadingPlanets: boolean;
   planetError: string | null;
   refreshPlanets: () => Promise<void>;
+  showEntryScreen: boolean;
+  setShowEntryScreen: (show: boolean) => void;
 }
 
 const defaultPlanets: Planet[] = [
@@ -24,6 +26,8 @@ const PlanetaryContext = createContext<PlanetaryContextType>({
   loadingPlanets: false,
   planetError: null,
   refreshPlanets: async () => {},
+  showEntryScreen: true,
+  setShowEntryScreen: () => {},
 });
 
 export const PlanetaryProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -31,6 +35,18 @@ export const PlanetaryProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const [planets, setPlanets] = useState<Planet[]>(defaultPlanets);
   const [loadingPlanets, setLoadingPlanets] = useState<boolean>(true);
   const [planetError, setPlanetError] = useState<string | null>(null);
+
+  // Check if user already entered in current browser session, default to true
+  const [showEntryScreen, setShowEntryScreen] = useState<boolean>(() => {
+    return sessionStorage.getItem('terratwin_entered') !== 'true';
+  });
+
+  const handleSetShowEntryScreen = (show: boolean) => {
+    setShowEntryScreen(show);
+    if (!show) {
+      sessionStorage.setItem('terratwin_entered', 'true');
+    }
+  };
 
   const fetchPlanets = async () => {
     setLoadingPlanets(true);
@@ -40,7 +56,7 @@ export const PlanetaryProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         setPlanets(data);
       }
       setPlanetError(null);
-    } catch (err) {
+    } catch {
       // Backend may be offline; keep default bodies but record error for health state
       setPlanetError('Unable to load planet list from backend.');
     } finally {
@@ -61,6 +77,8 @@ export const PlanetaryProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         loadingPlanets,
         planetError,
         refreshPlanets: fetchPlanets,
+        showEntryScreen,
+        setShowEntryScreen: handleSetShowEntryScreen,
       }}
     >
       {children}

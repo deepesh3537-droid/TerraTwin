@@ -1,5 +1,5 @@
 import React from 'react';
-import { Menu, Search, ExternalLink, Shield } from 'lucide-react';
+import { Menu, Search, ExternalLink, Shield, Orbit } from 'lucide-react';
 import { usePlanetaryContext } from '../../app/planetaryContext';
 
 interface TopBarProps {
@@ -7,7 +7,7 @@ interface TopBarProps {
 }
 
 export const TopBar: React.FC<TopBarProps> = ({ onToggleSidebar }) => {
-  const { selectedPlanet, setSelectedPlanet, planets } = usePlanetaryContext();
+  const { selectedPlanet, setSelectedPlanet, planets, setShowEntryScreen } = usePlanetaryContext();
 
   return (
     <header className="h-16 bg-space-900 border-b border-space-border px-4 lg:px-8 flex items-center justify-between sticky top-0 z-20">
@@ -32,7 +32,18 @@ export const TopBar: React.FC<TopBarProps> = ({ onToggleSidebar }) => {
         </div>
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3">
+        {/* Switch to 3D Solar System View Button */}
+        <button
+          type="button"
+          onClick={() => setShowEntryScreen(true)}
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono text-cyan-300 hover:text-white bg-cyan-950/40 hover:bg-cyan-900/60 border border-cyan-500/30 transition-all shadow-[0_0_10px_rgba(56,189,248,0.2)]"
+          title="Switch to 3D Solar System Entry View"
+        >
+          <Orbit className="w-3.5 h-3.5 text-cyan-400" />
+          <span className="hidden md:inline">Solar System</span>
+        </button>
+
         {/* Planetary Body Selector Pill */}
         <div className="flex items-center bg-space-950 p-1 rounded-lg border border-space-border text-xs" role="group" aria-label="Target Planetary Body Selector">
           {planets.map((planet) => {
