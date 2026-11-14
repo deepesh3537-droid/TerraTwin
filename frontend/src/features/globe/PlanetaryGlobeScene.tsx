@@ -33,12 +33,12 @@ export const PlanetaryGlobeScene = forwardRef<PlanetaryGlobeRef, PlanetaryGlobeS
       },
     }));
 
-    const planetRadius = planet === 'earth' ? 2.0 : planet === 'moon' ? 1.85 : 1.9;
+    const planetRadius = planet === 'earth' ? 1.28 : planet === 'moon' ? 1.18 : 1.22;
 
     return (
       <div className="w-full h-full min-h-[460px] bg-[#020409] relative select-none overflow-hidden">
         <Canvas
-          camera={{ position: [0, 1.2, 4.6], fov: 45 }}
+          camera={{ position: [0, 0.6, 4.8], fov: 45 }}
           dpr={[1, 1.5]}
           gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}
         >
@@ -52,8 +52,8 @@ export const PlanetaryGlobeScene = forwardRef<PlanetaryGlobeRef, PlanetaryGlobeS
             ref={controlsRef}
             enableDamping
             dampingFactor={0.06}
-            minDistance={2.4}
-            maxDistance={8.5}
+            minDistance={1.8}
+            maxDistance={8.0}
             rotateSpeed={0.65}
             zoomSpeed={0.8}
           />

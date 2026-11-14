@@ -101,7 +101,7 @@ export const GlobeRegionMarkers: React.FC<GlobeRegionMarkersProps> = ({
               rotation={new THREE.Euler(0, 0, 0)}
               onUpdate={(self) => self.lookAt(lookTarget)}
             >
-              <ringGeometry args={[0.04, active ? 0.12 : 0.08, 24]} />
+              <ringGeometry args={[0.025, active ? 0.08 : 0.05, 24]} />
               <meshBasicMaterial
                 color={isSelected ? '#38bdf8' : isHovered ? '#34d399' : '#0ea5e9'}
                 transparent
@@ -111,8 +111,8 @@ export const GlobeRegionMarkers: React.FC<GlobeRegionMarkersProps> = ({
             </mesh>
 
             {/* Glowing Beacon Pin */}
-            <mesh position={[0, 0, 0.05]} onUpdate={(self) => self.lookAt(lookTarget)}>
-              <sphereGeometry args={[active ? 0.045 : 0.03, 16, 16]} />
+            <mesh position={[0, 0, 0.03]} onUpdate={(self) => self.lookAt(lookTarget)}>
+              <sphereGeometry args={[active ? 0.03 : 0.02, 16, 16]} />
               <meshBasicMaterial
                 color={isSelected ? '#ffffff' : isHovered ? '#6ee7b7' : '#38bdf8'}
               />
@@ -121,7 +121,7 @@ export const GlobeRegionMarkers: React.FC<GlobeRegionMarkersProps> = ({
             {/* Floating Scientific Name Label */}
             {active && (
               <Html
-                position={[0, 0.12, 0]}
+                position={[0, 0.08, 0]}
                 center
                 distanceFactor={7}
                 className="pointer-events-none select-none transition-all duration-200"

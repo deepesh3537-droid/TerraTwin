@@ -21,7 +21,7 @@ export const MarsGlobe: React.FC<MarsGlobeProps> = ({ autoRotate = true }) => {
     <group>
       {/* Martian Terrain Sphere */}
       <mesh ref={marsRef}>
-        <sphereGeometry args={[1.9, 64, 64]} />
+        <sphereGeometry args={[1.22, 64, 64]} />
         <meshStandardMaterial
           map={marsTexture}
           roughness={0.8}
@@ -31,7 +31,7 @@ export const MarsGlobe: React.FC<MarsGlobeProps> = ({ autoRotate = true }) => {
 
       {/* Thin CO2 Atmospheric Amber Glow */}
       <mesh>
-        <sphereGeometry args={[2.02, 32, 32]} />
+        <sphereGeometry args={[1.30, 32, 32]} />
         <meshBasicMaterial
           color="#f97316"
           transparent
@@ -43,7 +43,7 @@ export const MarsGlobe: React.FC<MarsGlobeProps> = ({ autoRotate = true }) => {
 
       {/* Orbit/Equatorial Alignment Reticle Ring */}
       <mesh rotation={[-Math.PI / 2, 0, 0]}>
-        <ringGeometry args={[2.14, 2.17, 48]} />
+        <ringGeometry args={[1.37, 1.40, 48]} />
         <meshBasicMaterial
           color="#ea580c"
           transparent

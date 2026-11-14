@@ -29,7 +29,7 @@ export const EarthGlobe: React.FC<EarthGlobeProps> = ({ autoRotate = true }) => 
     <group>
       {/* Earth Surface Sphere */}
       <mesh ref={earthRef}>
-        <sphereGeometry args={[2.0, 64, 64]} />
+        <sphereGeometry args={[1.28, 64, 64]} />
         <meshStandardMaterial
           map={earthTexture}
           roughness={0.65}
@@ -39,7 +39,7 @@ export const EarthGlobe: React.FC<EarthGlobeProps> = ({ autoRotate = true }) => 
 
       {/* Cloud Atmospheric Shell */}
       <mesh ref={cloudsRef}>
-        <sphereGeometry args={[2.025, 48, 48]} />
+        <sphereGeometry args={[1.30, 48, 48]} />
         <meshStandardMaterial
           map={cloudsTexture}
           transparent
@@ -51,7 +51,7 @@ export const EarthGlobe: React.FC<EarthGlobeProps> = ({ autoRotate = true }) => 
 
       {/* Atmospheric Rayleigh Scattering Rim Glow */}
       <mesh>
-        <sphereGeometry args={[2.14, 32, 32]} />
+        <sphereGeometry args={[1.37, 32, 32]} />
         <meshBasicMaterial
           color="#38bdf8"
           transparent

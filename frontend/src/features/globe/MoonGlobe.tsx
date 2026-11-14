@@ -21,7 +21,7 @@ export const MoonGlobe: React.FC<MoonGlobeProps> = ({ autoRotate = true }) => {
     <group>
       {/* Airless Lunar Surface Sphere */}
       <mesh ref={moonRef}>
-        <sphereGeometry args={[1.85, 64, 64]} />
+        <sphereGeometry args={[1.18, 64, 64]} />
         <meshStandardMaterial
           map={moonTexture}
           roughness={0.9}
@@ -31,7 +31,7 @@ export const MoonGlobe: React.FC<MoonGlobeProps> = ({ autoRotate = true }) => {
 
       {/* Orbit/Equatorial Alignment Reticle Ring */}
       <mesh rotation={[-Math.PI / 2, 0, 0]}>
-        <ringGeometry args={[2.08, 2.11, 48]} />
+        <ringGeometry args={[1.32, 1.35, 48]} />
         <meshBasicMaterial
           color="#94a3b8"
           transparent
