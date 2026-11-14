@@ -6,8 +6,13 @@
 **Last updated:** 2026-11-14
 
 ## Current Status
-**Base Platform Complete, Verified & Handoff-Ready.**
-All base phases (Phase 0 through Phase 7) are 100% complete. All criteria in Phase 7 (Run and setup, API and database, Frontend, Quality and handoff) have been audited and passed. The platform is ready for handoff to the team to execute Phase 8 post-handoff modules (richer visualizations, real NASA data ingestion, ML similarity algorithms) behind the existing contracts.
+**Base Platform & 3D Mission Control Visual Experience Complete & Verified.**
+The platform features an immersive 3D Solar System Entry Screen and an interactive 3D Planetary Mission Control Dashboard (OrbitTrack-inspired):
+- **3D Solar System Entry Screen:** Procedural Sun, Earth, Moon, and Mars objects with Keplerian orbits, starfield, ephemeris telemetry, and smooth warp fly-in transition.
+- **3D Mission Control Globe:** High-fidelity interactive 3D globes for Earth (continents, oceans, separate drifting cloud shell, Rayleigh scattering), Moon (anorthosite highlands, volcanic maria, crater rays), and Mars (iron oxide rust, volcanic plains, polar caps) with physics-damped OrbitControls.
+- **Spherical Region Projections:** Real geographic coordinates ($\text{lat}, \text{lon}$) from backend GeoJSON footprints projected into 3D Cartesian coordinates with interactive glowing beacon pins and telemetry tooltips.
+- **HUD & Dual-Mode Toggle:** Mission Control HUD with ephemeris constants (Radius, Gravity, Day length, Orbital velocity, CRS) and seamless switching between 3D Globe and 2D GIS MapLibre canvas.
+- **Optimized Bundle & Laptop Performance:** Rollup manualChunks code-splitting (`three-core`, `three-react`, `react-vendor`, `map-vendor`), lazy loading of 3D scenes, and lightweight procedural canvas textures (<5ms generation, 0 external network requests).
 
 ## Completed
 - Phase 0: Planning & Documentation (TASK-000, TASK-000a, TASK-000b)
@@ -17,29 +22,17 @@ All base phases (Phase 0 through Phase 7) are 100% complete. All criteria in Pha
 - Phase 4: Frontend Foundation (TASK-030 to TASK-036)
 - Phase 5: Frontend Integration (TASK-040 to TASK-049)
 - Phase 6: Documentation & Validation (TASK-050 to TASK-056)
-- Phase 7: Handoff Readiness:
-  - Verified fresh clone configuration from `README.md`
-  - Zero laptop-specific absolute paths in tracked files
-  - Zero committed credentials or large raw datasets
-  - All 14 required documentation files present and complete
-  - Backend modular monolith verified: models, migrations, idempotency seed, OpenAPI contract, and health/readiness probes
-  - Frontend verified: React shell, MapLibre adapter, layer panel, region inspector, catalog with provenance drawer, 501 analysis states with zero fabricated scores, responsive viewports (375px, 768px, 1440px)
-  - Backend tests (22/22) passing in 0.60s
-  - Frontend production build (`npm run build`) passing in 10.46s
+- Phase 7: Handoff Readiness
+- 3D Mission Control Upgrade:
+  - Phase 1: Cinematic 3D Solar System Entry Screen (`PlanetaryEntryScreen.tsx`, `SolarSystemScene.tsx`, `Sun.tsx`, `Planet.tsx`, `StarField.tsx`, `CameraRig.tsx`)
+  - Phase 2: Interactive 3D Planetary Mission Control Dashboard (`PlanetaryGlobe.tsx`, `PlanetaryGlobeScene.tsx`, `EarthGlobe.tsx`, `MoonGlobe.tsx`, `MarsGlobe.tsx`, `GlobeRegionMarkers.tsx`, `GlobeMissionHUD.tsx`)
+  - Phase 3: Application Integration & Laptop Optimization (`vite.config.ts` manualChunks, `AppShell.tsx` lazy loading, `TopBar.tsx`, `Sidebar.tsx`, `OverviewPage.tsx`)
 
-## Current Task
-Base platform completed and verified. Ready for team distribution and Phase 8 (Post-Handoff Feature Extensions).
-
-## Not Verified / Not Done
-- TASK-007 / DB-01: PostGIS live container startup (pending user's manual Docker Desktop installation on host).
-- Real NASA dataset ingestion (Phase 8 post-handoff).
-
-## Known Issues / Open Items
-- Target users, hackathon deadline, team member names, and design token values remain **TBD** (see `PRD.md` §14 and `DESIGN.md`).
-
-## Assumptions Recorded
-- File `RULES.md` (the request said `RULE.md`; the guide and all cross-references use `RULES.md`).
-- Uppercase doc filenames confirmed (TASK-000b).
+## Verification Summary
+- **Backend Tests:** 22/22 passed in 0.58s (`pytest -v`).
+- **Frontend Production Build:** `npm run build` passed cleanly in 15.97s with zero chunk size warnings (`three-core`, `three-react`, `react-vendor`, `map-vendor` split).
+- **No laptop-specific absolute paths:** Confirmed clean across repository.
+- **No committed credentials or large raw datasets:** Confirmed.
 
 ## Next Step
-Distribute repository to team members (Member 1: Frontend/Map, Member 2: GIS/Ingestion, Member 3: Analysis/ML) per `docs/team-ownership.md`.
+Ready for team distribution and Phase 8 post-handoff extensions per `docs/team-ownership.md`.

@@ -9,7 +9,9 @@ import {
   Bot,
   Database,
   BookOpen,
+  Orbit,
 } from 'lucide-react';
+import { usePlanetaryContext } from '../../app/planetaryContext';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -28,6 +30,8 @@ const navItems = [
 ];
 
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
+  const { setShowEntryScreen } = usePlanetaryContext();
+
   return (
     <>
       {/* Mobile backdrop */}
@@ -60,6 +64,19 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
 
         {/* Navigation links */}
         <nav className="flex-1 py-4 px-3 space-y-1 overflow-y-auto">
+          {/* Quick jump to 3D Solar System Entry View */}
+          <button
+            type="button"
+            onClick={() => {
+              setShowEntryScreen(true);
+              onClose?.();
+            }}
+            className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-mono text-cyan-300 hover:text-white bg-cyan-950/30 hover:bg-cyan-900/50 border border-cyan-500/30 transition-all mb-3 shadow-[0_0_10px_rgba(56,189,248,0.15)]"
+          >
+            <Orbit className="w-4 h-4 text-cyan-400 shrink-0" />
+            <span>3D Solar System View</span>
+          </button>
+
           {navItems.map((item) => {
             const Icon = item.icon;
             return (

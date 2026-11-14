@@ -10,13 +10,16 @@ import {
   MapPin,
   RefreshCw,
   AlertTriangle,
+  Orbit,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { getDatasets, getPlanets, getReadiness, getRegions, getSystemInfo } from '../../services';
 import { ReadinessResponse, SystemInfo } from '../../types';
 import { LoadingState } from '../../components/feedback';
+import { usePlanetaryContext } from '../../app/planetaryContext';
 
 export const OverviewPage: React.FC = () => {
+  const { setShowEntryScreen } = usePlanetaryContext();
   const [loading, setLoading] = useState(true);
   const [backendOnline, setBackendOnline] = useState<boolean | null>(null);
   const [systemInfo, setSystemInfo] = useState<SystemInfo | null>(null);
@@ -91,16 +94,23 @@ export const OverviewPage: React.FC = () => {
             Identifying and characterizing terrestrial environments with comparable measurable characteristics to lunar and Martian exploration sites.
           </p>
           <div className="flex flex-wrap gap-3">
+            <button
+              onClick={() => setShowEntryScreen(true)}
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-gradient-to-r from-cyan-500 to-sky-500 hover:from-cyan-400 hover:to-sky-400 text-space-950 font-bold text-sm transition-all shadow-lg shadow-cyan-500/25"
+            >
+              <Orbit className="w-4 h-4" />
+              Launch 3D Solar System
+            </button>
             <Link
               to="/explorer"
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-sky-500 hover:bg-sky-400 text-space-950 font-semibold text-sm transition-colors shadow-lg shadow-sky-500/20"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-space-800 hover:bg-space-700 text-slate-200 border border-space-border text-sm font-medium transition-colors"
             >
-              <Globe className="w-4 h-4" />
-              Open Planetary Explorer
+              <Globe className="w-4 h-4 text-sky-400" />
+              Open 3D Mission Control
             </Link>
             <Link
               to="/catalog"
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-space-800 hover:bg-space-700 text-slate-200 border border-space-border text-sm font-medium transition-colors"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-space-850 hover:bg-space-800 text-slate-300 border border-space-border text-sm font-medium transition-colors"
             >
               <Database className="w-4 h-4" />
               Browse Data Catalog
