@@ -30,23 +30,23 @@ Basic Pytest coverage for **health, catalog, region, and placeholder analysis ro
 | BE-02 | Health | `GET /api/v1/health/ready` with DB up | `200`, DB connected | Passed |
 | BE-03 | Health | Ready endpoint with DB unreachable | Reports failure honestly (not "ok") | Passed |
 | BE-04 | System | `GET /api/v1/system/info` | Version + module readiness | Passed |
-| BE-05 | Planets | `GET /api/v1/planets` | Exactly `earth`, `moon`, `mars` | Not run |
-| BE-06 | Planets | `GET /api/v1/planets/unknown` | `404` + error envelope | Not run |
-| BE-07 | Datasets | List with empty catalog | `200`, empty list, pagination fields | Not run |
-| BE-08 | Datasets | Filter by `planet`, `category`, `variable`, `status` | Only matching records | Not run |
-| BE-09 | Datasets | `limit`/`offset` pagination | Correct slice; invalid values → `422` | Not run |
-| BE-10 | Datasets | Unknown `dataset_id` | `404` | Not run |
-| BE-11 | Layers | List/filter by `planet`, `category`, `available` | Correct results | Not run |
-| BE-12 | Layers | `rendering_url` is `null` where unavailable | Not claimed renderable | Not run |
-| BE-13 | Regions | List, empty result, `planet` + `search` filters | Correct results | Not run |
-| BE-14 | Regions | Detail, `/datasets`, `/layers`; unknown ID | `200` / `404` | Not run |
-| BE-15 | Analysis | `GET /analysis/capabilities` | Each module reported as `not_implemented` (honest) | Not run |
-| BE-16 | Analysis | Each `POST` route with **valid** body | `501` + `ANALYSIS_NOT_IMPLEMENTED`-style envelope | Not run |
-| BE-17 | Analysis | Each `POST` route with **invalid** body | `422` | Not run |
-| BE-18 | Analysis | `GET /analysis/runs/{unknown}` | `404`, no fake run | Not run |
-| BE-19 | Contract | `/docs` and OpenAPI load | Schema served | Not run |
-| BE-20 | Integrity | Responses contain no fabricated scores/probabilities/measurements | None present | Not run |
-| BE-21 | Integrity | Demo records have `is_demo: true` | True for all seeds | Not run |
+| BE-05 | Planets | `GET /api/v1/planets` | Exactly `earth`, `moon`, `mars` | Passed |
+| BE-06 | Planets | `GET /api/v1/planets/unknown` | `404` + error envelope | Passed |
+| BE-07 | Datasets | List with empty catalog | `200`, empty list, pagination fields | Passed |
+| BE-08 | Datasets | Filter by `planet`, `category`, `variable`, `status` | Only matching records | Passed |
+| BE-09 | Datasets | `limit`/`offset` pagination | Correct slice; invalid values → `422` | Passed |
+| BE-10 | Datasets | Unknown `dataset_id` | `404` | Passed |
+| BE-11 | Layers | List/filter by `planet`, `category`, `available` | Correct results | Passed |
+| BE-12 | Layers | `rendering_url` is `null` where unavailable | Not claimed renderable | Passed |
+| BE-13 | Regions | List, empty result, `planet` + `search` filters | Correct results | Passed |
+| BE-14 | Regions | Detail, `/datasets`, `/layers`; unknown ID | `200` / `404` | Passed |
+| BE-15 | Analysis | `GET /analysis/capabilities` | Each module reported as `not_implemented` (honest) | Passed |
+| BE-16 | Analysis | Each `POST` route with **valid** body | `501` + `ANALYSIS_NOT_IMPLEMENTED`-style envelope | Passed |
+| BE-17 | Analysis | Each `POST` route with **invalid** body | `422` | Passed |
+| BE-18 | Analysis | `GET /analysis/runs/{unknown}` | `404`, no fake run | Passed |
+| BE-19 | Contract | `/docs` and OpenAPI load | Schema served | Passed |
+| BE-20 | Integrity | Responses contain no fabricated scores/probabilities/measurements | None present | Passed |
+| BE-21 | Integrity | Demo records have `is_demo: true` | True for all seeds | Passed |
 
 ## 3. Database / Migration Checks
 
@@ -55,7 +55,7 @@ Basic Pytest coverage for **health, catalog, region, and placeholder analysis ro
 | DB-01 | Compose starts PostGIS | Container healthy | Not run |
 | DB-02 | `alembic upgrade head` on empty DB | Succeeds | Not run |
 | DB-03 | Seed script | Inserts demo-only records | Passed |
-| DB-04 | App runs with **empty** catalog (seed not run) | No crash; empty states | Not run |
+| DB-04 | App runs with **empty** catalog (seed not run) | No crash; empty states | Passed |
 | DB-05 | CRS stored with each geometry/footprint | CRS field present; never silently EPSG:4326 for Moon/Mars | Passed |
 | DB-06 | `local_path` values | Relative to data root, never absolute | Not run |
 

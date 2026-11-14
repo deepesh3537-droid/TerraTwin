@@ -6,7 +6,7 @@
 **Last updated:** 2026-11-14
 
 ## Current Status
-Phase 2 (Backend Foundation) completed and verified. FastAPI application skeleton, Pydantic settings, centralized error envelopes, database session/models, Alembic initial migration, idempotent demo seed, and health endpoints implemented and tested with 5 passing tests.
+Phase 3 (API Contracts) completed and verified. Complete domain API surface implemented across routes, services, repositories, schemas, and extension points. Automated test suite has 22 passing tests covering BE-01 through BE-21 with 0 failures.
 
 ## Completed
 - Phase 0: Planning & Documentation (TASK-000, TASK-000a, TASK-000b)
@@ -19,25 +19,21 @@ Phase 2 (Backend Foundation) completed and verified. FastAPI application skeleto
   - TASK-005: Created `data/{raw,processed,samples,manifests}` with `.gitkeep` files and `dataset_manifest.example.json`.
   - TASK-006: Installed Git (2.56.0), initialized repository, staged files, and made initial commit `a4ada95`.
 - Phase 2: Backend Foundation:
-  - TASK-010: Created `backend/pyproject.toml` (PEP 621) with FastAPI, SQLAlchemy, Alembic, Psycopg, GeoAlchemy2, Pytest, HTTPX.
-  - TASK-011: FastAPI app skeleton (`app/main.py`, `app/api/router.py`) with versioned `/api/v1` prefix and CORS middleware.
-  - TASK-012: Settings via Pydantic (`app/core/config.py`), logging (`app/core/logging.py`), centralized error envelope & handlers (`app/core/errors.py` incl. 501 `NotImplementedException`).
-  - TASK-013: Database session and Base (`app/core/database.py`, `app/db/base.py`, `app/db/session.py`).
-  - TASK-014: SQLAlchemy models: `Planet`, `Dataset`, `Layer`, `Region`, `AnalysisRun` with explicit CRS tracking per ADR-009.
-  - TASK-015: Alembic setup and initial migration `0001_initial_postgis_and_models.py` (verified via `alembic heads` and `--sql` static generation).
-  - TASK-016: Idempotent seed script (`app/db/seed.py`) with `earth`, `moon`, `mars` and minimal demo records (`is_demo: true`, no invented measurements).
-  - TASK-017: Health endpoints `/health`, `/api/v1/health/ready`, `/api/v1/system/info`.
-  - TASK-018: Verified migration, seed execution, Uvicorn configuration, and Pytest coverage (5 tests passed: BE-01, BE-02, BE-03, BE-04, DB-03).
-
-## Environment Notes & Discoveries
-- Python: 3.14.6 (`python.exe` in PATH). Note: `pyproject.toml` readme must be local to package directory (`backend/README.md`) for PEP 517 build.
-- Asyncio on Windows Sandbox: On Windows, loopback network socket/IPC operations required by `asyncio` Proactor loop require network execution permissions. Tests use `httpx.ASGITransport` with `@pytest.mark.asyncio`.
-- Node.js: v25.2.1 (`node.exe` in PATH). Run `npm.cmd` directly in Windows PowerShell.
-- Git: Installed in user space at `$env:LOCALAPPDATA\Programs\Git\cmd\git.exe`.
-- Docker Desktop: Being installed manually by owner. Live container test (TASK-007) deferred.
+  - TASK-010 to TASK-018: Built models, migrations, seed, and health routes.
+- Phase 3: API Contracts:
+  - TASK-020: Pydantic schemas for common pagination/error envelopes, planets, datasets, layers, regions, and analysis request contracts.
+  - TASK-021: Clean repository layer (`PlanetRepository`, `DatasetRepository`, `LayerRepository`, `RegionRepository`) and service layer (`CatalogService`, `RegionService`).
+  - TASK-022: Planets routes (`GET /api/v1/planets`, `GET /api/v1/planets/{id}`).
+  - TASK-023: Datasets routes (`GET /api/v1/datasets`, `GET /api/v1/datasets/{id}`, `GET /api/v1/datasets/{id}/layers`) with filtering and pagination.
+  - TASK-024: Layers routes (`GET /api/v1/layers`, `GET /api/v1/layers/{id}`) with filtering and availability status.
+  - TASK-025: Regions routes (`GET /api/v1/regions`, `GET /api/v1/regions/{id}`, `/datasets`, `/layers`) with search and pagination.
+  - TASK-026: Analysis capabilities route (`GET /api/v1/analysis/capabilities`) reporting honest `not_implemented` module states.
+  - TASK-027: Planned analysis POST routes (`features`, `compare`, `similarity`, `suitability`, `rover-testing`) validating input schemas and returning HTTP 501; `runs/{id}` returning HTTP 404.
+  - TASK-028: Extension point interfaces in `app/geospatial/` and `app/analysis/` with body-specific CRS validation (`coordinate_metadata.py`).
+  - TASK-029: 22 automated tests passing in 0.51s, verifying BE-01 through BE-21, DB-03, DB-04, and DB-05.
 
 ## Current Task
-Phase 2 completed and verified. Awaiting authorization to begin Phase 3: API Contracts (`TASK-020` through `TASK-029`).
+Phase 3 completed and verified. Awaiting authorization to begin Phase 4: Frontend Foundation (`TASK-030` through `TASK-036`).
 
 ## Not Verified / Not Done
 - TASK-007 / DB-01: PostGIS live container startup (pending host Docker Desktop setup).

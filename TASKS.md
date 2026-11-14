@@ -34,16 +34,16 @@ Legend: `[ ]` not started · `[x]` done
 - [x] TASK-018: Verify migration + seed + backend start
 
 ## Phase 3: API Contracts
-- [ ] TASK-020: Pydantic schemas (common, planet, dataset, layer, region, analysis) incl. pagination + error envelope
-- [ ] TASK-021: Repositories (dataset, layer, region) and services (catalog, region)
-- [ ] TASK-022: Planets routes
-- [ ] TASK-023: Datasets routes (filters: planet, category, variable, status; pagination)
-- [ ] TASK-024: Layers routes (filters: planet, category, available)
-- [ ] TASK-025: Regions routes (filters: planet, search; datasets/layers sub-routes)
-- [ ] TASK-026: Analysis capabilities route (honest statuses)
-- [ ] TASK-027: Analysis POST routes (`features`, `compare`, `similarity`, `suitability`, `rover-testing`): validate → `501`; `runs/{run_id}` → `404`
-- [ ] TASK-028: Interfaces/extension points: `geospatial/` and `analysis/` (no fake implementations)
-- [ ] TASK-029: Backend tests BE-01 to BE-21 (`TEST_PLAN.md`) and run them
+- [x] TASK-020: Pydantic schemas (common, planet, dataset, layer, region, analysis) incl. pagination + error envelope
+- [x] TASK-021: Repositories (dataset, layer, region) and services (catalog, region)
+- [x] TASK-022: Planets routes
+- [x] TASK-023: Datasets routes (filters: planet, category, variable, status; pagination)
+- [x] TASK-024: Layers routes (filters: planet, category, available)
+- [x] TASK-025: Regions routes (filters: planet, search; datasets/layers sub-routes)
+- [x] TASK-026: Analysis capabilities route (honest statuses)
+- [x] TASK-027: Analysis POST routes (`features`, `compare`, `similarity`, `suitability`, `rover-testing`): validate → `501`; `runs/{run_id}` → `404`
+- [x] TASK-028: Interfaces/extension points: `geospatial/` and `analysis/` (no fake implementations)
+- [x] TASK-029: Backend tests BE-01 to BE-21 (`TEST_PLAN.md`) and run them
 
 ## Phase 4: Frontend Foundation
 - [ ] TASK-030: Vite + React + TypeScript + Tailwind setup
