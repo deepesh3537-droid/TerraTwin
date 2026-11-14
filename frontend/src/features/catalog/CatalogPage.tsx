@@ -1,469 +1,346 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import {
-  Filter,
-  Search,
-  ExternalLink,
-  Layers,
-  Database,
-  Globe,
-  Tag,
-  FileText,
-  X,
-} from 'lucide-react';
-import { Dataset, Layer } from '../../types';
-import { getDatasets, getDatasetLayers } from '../../services';
-import { LoadingState, EmptyState, ErrorState } from '../../components/feedback';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import { AlertCircle, RefreshCw, Layers } from 'lucide-react';
+import { Dataset } from '../../types';
+import { getDatasets } from '../../services';
+import { LoadingState, EmptyState } from '../../components/feedback';
 import { usePlanetaryContext } from '../../app/planetaryContext';
+import { CatalogHeader } from './CatalogHeader';
+import { CatalogFilterBar } from './CatalogFilterBar';
+import { DatasetGridView } from './DatasetGridView';
+import { DatasetListView } from './DatasetListView';
+import { DatasetDetailDrawer } from './DatasetDetailDrawer';
+import { DatasetComparisonModal } from './DatasetComparisonModal';
+import { DEMO_CATALOG_DATASETS } from './catalogDemoData';
 
 export const CatalogPage: React.FC = () => {
   const { selectedPlanet: globalPlanet } = usePlanetaryContext();
+
+  // Active filters
   const [selectedPlanet, setSelectedPlanet] = useState<string>('all');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedStatus, setSelectedStatus] = useState<string>('all');
+  const [selectedFormat, setSelectedFormat] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
 
-  const [datasets, setDatasets] = useState<Dataset[]>([]);
+  // View state: 'grid' | 'list'
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+
+  // Backend dataset records
+  const [backendDatasets, setBackendDatasets] = useState<Dataset[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const [isBackendConnected, setIsBackendConnected] = useState<boolean>(true);
+  const [backendError, setBackendError] = useState<string | null>(null);
 
-  // Detail inspection
+  // Offline / Demonstration mode toggle
+  const [isDemoMode, setIsDemoMode] = useState<boolean>(false);
+
+  // Inspection drawer state
   const [inspectedDataset, setInspectedDataset] = useState<Dataset | null>(null);
-  const [datasetLayers, setDatasetLayers] = useState<Layer[]>([]);
-  const [loadingLayers, setLoadingLayers] = useState<boolean>(false);
 
-  // Sync with global planet when changed
+  // Multi-dataset comparison state
+  const [selectedCompareIds, setSelectedCompareIds] = useState<string[]>([]);
+  const [isComparisonOpen, setIsComparisonOpen] = useState<boolean>(false);
+
+  // Synchronize with global planetary context when it changes
   useEffect(() => {
-    if (globalPlanet) {
+    if (globalPlanet && globalPlanet !== 'all') {
       setSelectedPlanet(globalPlanet);
     }
   }, [globalPlanet]);
 
+  // Load datasets from backend API (GET /api/v1/datasets)
   const loadDatasets = useCallback(async () => {
     setLoading(true);
-    setError(null);
-    try {
-      const params: { planet?: string; category?: string; status?: string } = {};
-      if (selectedPlanet !== 'all') params.planet = selectedPlanet;
-      if (selectedCategory !== 'all') params.category = selectedCategory;
-      if (selectedStatus !== 'all') params.status = selectedStatus;
+    setBackendError(null);
 
-      const res = await getDatasets(params);
-      setDatasets(res.items || []);
+    try {
+      // Query backend with limit 100
+      const res = await getDatasets({ limit: 100 });
+      const items = res.items || [];
+      setBackendDatasets(items);
+      setIsBackendConnected(true);
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Unable to connect to data catalog.';
-      setError(msg);
+      const msg = err instanceof Error ? err.message : 'Unable to connect to dataset catalog API.';
+      setBackendError(msg);
+      setIsBackendConnected(false);
+      // Auto-enable demo catalog if backend is completely offline so the user can inspect the UI
+      setIsDemoMode(true);
     } finally {
       setLoading(false);
     }
-  }, [selectedPlanet, selectedCategory, selectedStatus]);
+  }, []);
 
   useEffect(() => {
     loadDatasets();
   }, [loadDatasets]);
 
-  const openInspector = async (ds: Dataset) => {
-    setInspectedDataset(ds);
-    setLoadingLayers(true);
-    try {
-      const layers = await getDatasetLayers(ds.id);
-      setDatasetLayers(layers || []);
-    } catch {
-      setDatasetLayers([]);
-    } finally {
-      setLoadingLayers(false);
+  // Determine active source dataset collection
+  const activeDatasetCollection = useMemo(() => {
+    if (isBackendConnected && backendDatasets.length > 0 && !isDemoMode) {
+      return backendDatasets;
     }
-  };
+    if (isDemoMode) {
+      return DEMO_CATALOG_DATASETS;
+    }
+    return backendDatasets;
+  }, [isBackendConnected, backendDatasets, isDemoMode]);
 
-  const closeInspector = () => {
-    setInspectedDataset(null);
-    setDatasetLayers([]);
-  };
+  // Compute statistics strictly from actual data
+  const stats = useMemo(() => {
+    if (!isBackendConnected && !isDemoMode) {
+      return { total: null, earth: null, moon: null, mars: null };
+    }
 
-  // Filter by search query client-side
-  const filteredDatasets = datasets.filter((ds) => {
-    if (!searchQuery.trim()) return true;
-    const q = searchQuery.toLowerCase();
-    return (
-      ds.name.toLowerCase().includes(q) ||
-      (ds.description && ds.description.toLowerCase().includes(q)) ||
-      ds.variable.toLowerCase().includes(q) ||
-      (ds.source_agency && ds.source_agency.toLowerCase().includes(q))
+    const collection = activeDatasetCollection;
+    return {
+      total: collection.length,
+      earth: collection.filter((d) => d.planet_id === 'earth').length,
+      moon: collection.filter((d) => d.planet_id === 'moon').length,
+      mars: collection.filter((d) => d.planet_id === 'mars').length,
+    };
+  }, [isBackendConnected, isDemoMode, activeDatasetCollection]);
+
+  // Multi-field client filtering
+  const filteredDatasets = useMemo(() => {
+    return activeDatasetCollection.filter((ds) => {
+      // Planet filter
+      if (selectedPlanet !== 'all' && ds.planet_id !== selectedPlanet) {
+        return false;
+      }
+
+      // Category filter (support category substring/synonym e.g. terrain_elevation -> elevation)
+      if (selectedCategory !== 'all') {
+        const cat = ds.category.toLowerCase();
+        if (selectedCategory === 'elevation' && !cat.includes('elevation') && !cat.includes('topo')) {
+          return false;
+        } else if (selectedCategory !== 'elevation' && !cat.includes(selectedCategory)) {
+          return false;
+        }
+      }
+
+      // Status filter
+      if (selectedStatus !== 'all' && ds.ingestion_status.toLowerCase() !== selectedStatus.toLowerCase()) {
+        return false;
+      }
+
+      // Format filter
+      if (selectedFormat !== 'all') {
+        const fmt = (ds.format || '').toLowerCase();
+        if (!fmt.includes(selectedFormat.toLowerCase())) {
+          return false;
+        }
+      }
+
+      // Search query (case-insensitive across name, description, variable, agency, mission, instrument)
+      if (searchQuery.trim().length > 0) {
+        const q = searchQuery.toLowerCase();
+        const matchesName = ds.name.toLowerCase().includes(q);
+        const matchesDesc = (ds.description || '').toLowerCase().includes(q);
+        const matchesVar = ds.variable.toLowerCase().includes(q);
+        const matchesAgency = (ds.source_agency || '').toLowerCase().includes(q);
+        const matchesMission = (ds.mission || '').toLowerCase().includes(q);
+        const matchesInstrument = (ds.instrument || '').toLowerCase().includes(q);
+        const matchesCrs = ds.coordinate_reference_system.toLowerCase().includes(q);
+
+        if (
+          !matchesName &&
+          !matchesDesc &&
+          !matchesVar &&
+          !matchesAgency &&
+          !matchesMission &&
+          !matchesInstrument &&
+          !matchesCrs
+        ) {
+          return false;
+        }
+      }
+
+      return true;
+    });
+  }, [
+    activeDatasetCollection,
+    selectedPlanet,
+    selectedCategory,
+    selectedStatus,
+    selectedFormat,
+    searchQuery,
+  ]);
+
+  // Toggle dataset comparison selection
+  const handleToggleCompare = (dataset: Dataset) => {
+    setSelectedCompareIds((prev) =>
+      prev.includes(dataset.id) ? prev.filter((id) => id !== dataset.id) : [...prev, dataset.id]
     );
-  });
+  };
+
+  // Remove single dataset from comparison
+  const handleRemoveCompare = (id: string) => {
+    setSelectedCompareIds((prev) => prev.filter((x) => x !== id));
+  };
+
+  // Clear all compare selections
+  const handleClearCompare = () => {
+    setSelectedCompareIds([]);
+    setIsComparisonOpen(false);
+  };
+
+  // Reset all filters to default
+  const handleResetFilters = () => {
+    setSelectedPlanet('all');
+    setSelectedCategory('all');
+    setSelectedStatus('all');
+    setSelectedFormat('all');
+    setSearchQuery('');
+  };
+
+  // Datasets selected for multi-comparison matrix
+  const compareDatasets = useMemo(() => {
+    return activeDatasetCollection.filter((ds) => selectedCompareIds.includes(ds.id));
+  }, [activeDatasetCollection, selectedCompareIds]);
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-white mb-1">Data Catalog</h1>
-          <p className="text-xs text-slate-400">
-            Open planetary and Earth observation datasets registered with complete scientific provenance.
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="text-xs font-mono text-slate-400 bg-space-900 border border-space-border px-3 py-1.5 rounded-lg">
-            API: /api/v1/datasets
-          </span>
-        </div>
-      </div>
+    <div className="max-w-7xl mx-auto space-y-6 pb-12 font-sans">
+      {/* ========================================================================= */}
+      {/* 1. Header & Compact Statistics Section                                    */}
+      {/* ========================================================================= */}
+      <CatalogHeader
+        totalCount={stats.total}
+        earthCount={stats.earth}
+        moonCount={stats.moon}
+        marsCount={stats.mars}
+        isBackendConnected={isBackendConnected}
+        isDemoMode={isDemoMode}
+        loading={loading}
+        onRetry={loadDatasets}
+        onToggleDemoMode={() => setIsDemoMode((prev) => !prev)}
+      />
 
-      {/* Filter and Search Bar */}
-      <div className="p-4 rounded-xl bg-space-900 border border-space-border flex flex-wrap items-center justify-between gap-4">
-        {/* Planet filter buttons */}
-        <div className="flex items-center gap-1.5 flex-wrap text-xs">
-          <span className="text-slate-400 flex items-center gap-1 font-medium mr-1">
-            <Globe className="w-3.5 h-3.5" /> Body:
-          </span>
-          {['all', 'earth', 'moon', 'mars'].map((b) => (
-            <button
-              key={b}
-              onClick={() => setSelectedPlanet(b)}
-              className={`px-3 py-1 rounded-md capitalize font-medium transition-colors ${
-                selectedPlanet === b
-                  ? 'bg-sky-500/20 text-sky-300 border border-sky-500/30'
-                  : 'text-slate-400 hover:text-slate-200 bg-space-950'
-              }`}
-            >
-              {b}
-            </button>
-          ))}
-        </div>
-
-        {/* Category & Status Dropdowns */}
-        <div className="flex items-center gap-3 flex-wrap">
-          <div className="flex items-center gap-1.5 text-xs">
-            <Filter className="w-3.5 h-3.5 text-slate-500" />
-            <select
-              aria-label="Filter by Category"
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              className="bg-space-950 border border-space-border text-slate-300 text-xs rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-sky-500/50"
-            >
-              <option value="all">All Categories</option>
-              <option value="elevation">Elevation</option>
-              <option value="imagery">Imagery</option>
-              <option value="composition">Composition</option>
-              <option value="geology">Geology</option>
-              <option value="thermal">Thermal</option>
-            </select>
-          </div>
-
-          <div className="flex items-center gap-1.5 text-xs">
-            <Tag className="w-3.5 h-3.5 text-slate-500" />
-            <select
-              aria-label="Filter by Ingestion Status"
-              value={selectedStatus}
-              onChange={(e) => setSelectedStatus(e.target.value)}
-              className="bg-space-950 border border-space-border text-slate-300 text-xs rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-sky-500/50"
-            >
-              <option value="all">All Statuses</option>
-              <option value="available">Available</option>
-              <option value="pending">Pending</option>
-              <option value="prototype">Prototype</option>
-            </select>
-          </div>
-
-          {/* Search box */}
-          <div className="relative w-full sm:w-56">
-            <Search className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search datasets..."
-              className="w-full bg-space-950 border border-space-border text-xs rounded-lg pl-9 pr-3 py-1.5 text-slate-200 placeholder-slate-500 focus:outline-none focus:border-sky-500/50"
-            >
-            </input>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content Area */}
-      {loading ? (
-        <LoadingState message="Querying dataset catalog..." />
-      ) : error ? (
-        <ErrorState
-          title="Catalog Service Unavailable"
-          message={error}
-          onRetry={loadDatasets}
-        />
-      ) : filteredDatasets.length === 0 ? (
-        <EmptyState
-          title="No Datasets Found"
-          message="No registered datasets match your active body, category, and status filters."
-          actionText="Reset Filters"
-          onAction={() => {
-            setSelectedPlanet('all');
-            setSelectedCategory('all');
-            setSelectedStatus('all');
-            setSearchQuery('');
-          }}
-        />
-      ) : (
-        <div className="space-y-3">
-          {filteredDatasets.map((ds) => (
-            <div
-              key={ds.id}
-              onClick={() => openInspector(ds)}
-              className="p-5 rounded-xl bg-space-900 border border-space-border hover:border-sky-500/40 hover:bg-space-850/50 transition-all cursor-pointer group"
-            >
-              <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 mb-2">
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span
-                      className={`text-xs font-mono uppercase px-2 py-0.5 rounded border ${
-                        ds.planet_id === 'earth'
-                          ? 'bg-sky-500/10 text-sky-300 border-sky-500/30'
-                          : ds.planet_id === 'moon'
-                          ? 'bg-slate-300/10 text-slate-200 border-slate-400/30'
-                          : 'bg-orange-500/10 text-orange-300 border-orange-500/30'
-                      }`}
-                    >
-                      {ds.planet_id}
-                    </span>
-                    <span className="text-xs font-mono capitalize px-2 py-0.5 rounded bg-space-800 text-slate-300 border border-space-border">
-                      {ds.category}
-                    </span>
-                    {ds.is_demo && (
-                      <span className="text-xs font-mono uppercase px-2 py-0.5 rounded bg-amber-500/10 text-amber-300 border border-amber-500/20">
-                        Demo Fixture
-                      </span>
-                    )}
-                    <span
-                      className={`text-xs font-mono capitalize px-2 py-0.5 rounded ${
-                        ds.ingestion_status === 'available'
-                          ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                          : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
-                      }`}
-                    >
-                      {ds.ingestion_status}
-                    </span>
-                  </div>
-                  <h3 className="text-base font-semibold text-white group-hover:text-sky-300 transition-colors">
-                    {ds.name}
-                  </h3>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-mono text-slate-400 bg-space-950 px-2 py-1 rounded border border-space-border">
-                    {ds.coordinate_reference_system}
-                  </span>
-                </div>
-              </div>
-
-              <p className="text-xs text-slate-300 mb-4 max-w-3xl line-clamp-2">
-                {ds.description || 'No description provided for this dataset.'}
+      {/* ========================================================================= */}
+      {/* 2. Backend Offline Warning Banner (When Live API is Unreachable)         */}
+      {/* ========================================================================= */}
+      {!isBackendConnected && (
+        <div className="p-4 rounded-xl bg-amber-950/30 border border-amber-500/40 text-amber-200 text-xs font-mono flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-lg">
+          <div className="flex items-start gap-2.5">
+            <AlertCircle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+            <div className="space-y-1">
+              <span className="font-bold text-white uppercase text-[11px] block">
+                Catalog Service Offline — GET /api/v1/datasets Unreachable
+              </span>
+              <p className="text-[11px] text-amber-300/80 font-sans leading-relaxed">
+                {backendError || 'Backend API server is currently not responding.'} Showing curated
+                demonstration dataset fixtures with real scientific provenance for offline evaluation.
               </p>
-
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px] font-mono text-slate-400 pt-3 border-t border-space-border">
-                <div>
-                  <span className="text-slate-500">Agency:</span>{' '}
-                  <span className="text-slate-300">{ds.source_agency || '—'}</span>
-                </div>
-                <div>
-                  <span className="text-slate-500">Variable:</span>{' '}
-                  <span className="text-slate-300">{ds.variable}</span>
-                </div>
-                <div>
-                  <span className="text-slate-500">Format:</span>{' '}
-                  <span className="text-slate-300">{ds.format || '—'}</span>
-                </div>
-                <div>
-                  <span className="text-slate-500">Resolution:</span>{' '}
-                  <span className="text-slate-300">{ds.native_resolution || '—'}</span>
-                </div>
-              </div>
             </div>
-          ))}
+          </div>
+
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              onClick={loadDatasets}
+              disabled={loading}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 border border-amber-500/30 text-[11px] font-bold transition-colors"
+            >
+              <RefreshCw className={`w-3 h-3 ${loading ? 'animate-spin' : ''}`} />
+              <span>Retry Connection</span>
+            </button>
+          </div>
         </div>
       )}
 
-      {/* Dataset Detail Inspector Modal */}
-      {inspectedDataset && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-          <div className="bg-space-900 border border-space-border rounded-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl p-6">
-            <div className="flex items-start justify-between gap-4 border-b border-space-border pb-4 mb-4">
-              <div>
-                <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-                  <span className="text-xs font-mono uppercase px-2 py-0.5 rounded bg-sky-500/10 text-sky-300 border border-sky-500/30">
-                    {inspectedDataset.planet_id}
-                  </span>
-                  <span className="text-xs font-mono capitalize px-2 py-0.5 rounded bg-space-800 text-slate-300 border border-space-border">
-                    {inspectedDataset.category}
-                  </span>
-                  {inspectedDataset.is_demo && (
-                    <span className="text-xs font-mono uppercase px-2 py-0.5 rounded bg-amber-500/10 text-amber-300 border border-amber-500/20">
-                      Demo Fixture
-                    </span>
-                  )}
-                  <span className="text-xs font-mono text-slate-400 bg-space-950 px-2 py-0.5 rounded border border-space-border">
-                    CRS: {inspectedDataset.coordinate_reference_system}
-                  </span>
-                </div>
-                <h2 className="text-xl font-bold text-white">{inspectedDataset.name}</h2>
-              </div>
+      {/* ========================================================================= */}
+      {/* 3. Advanced Dataset Filtering Bar                                         */}
+      {/* ========================================================================= */}
+      <CatalogFilterBar
+        selectedPlanet={selectedPlanet}
+        onSelectPlanet={setSelectedPlanet}
+        selectedCategory={selectedCategory}
+        onSelectCategory={setSelectedCategory}
+        selectedStatus={selectedStatus}
+        onSelectStatus={setSelectedStatus}
+        selectedFormat={selectedFormat}
+        onSelectFormat={setSelectedFormat}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        viewMode={viewMode}
+        onToggleViewMode={setViewMode}
+        selectedCount={selectedCompareIds.length}
+        onOpenComparison={() => setIsComparisonOpen(true)}
+        onResetFilters={handleResetFilters}
+      />
+
+      {/* ========================================================================= */}
+      {/* 4. Dataset Discovery Area (Grid View vs List View)                        */}
+      {/* ========================================================================= */}
+      {loading ? (
+        <LoadingState message="Synchronizing scientific catalog records..." />
+      ) : filteredDatasets.length === 0 ? (
+        <EmptyState
+          title="No Matching Datasets Found"
+          message="No scientific datasets match your active planetary body, category, format, or search filters."
+          actionText="Reset All Filters"
+          onAction={handleResetFilters}
+        />
+      ) : (
+        <div className="space-y-3">
+          {/* Active Results Count & Active Comparison Counter */}
+          <div className="flex items-center justify-between text-xs font-mono text-slate-400 px-1">
+            <span>
+              Displaying <strong className="text-white">{filteredDatasets.length}</strong> registered{' '}
+              {filteredDatasets.length === 1 ? 'dataset' : 'datasets'}
+              {isDemoMode && ' (Offline Demonstration Fixtures)'}
+            </span>
+
+            {selectedCompareIds.length > 0 && (
               <button
-                onClick={closeInspector}
-                className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-space-800"
-                aria-label="Close Inspector"
+                onClick={() => setIsComparisonOpen(true)}
+                className="text-cyan-400 hover:text-cyan-300 flex items-center gap-1 font-bold"
               >
-                <X className="w-5 h-5" />
+                <Layers className="w-3.5 h-3.5" />
+                <span>{selectedCompareIds.length} selected for comparison</span>
               </button>
-            </div>
-
-            <div className="space-y-5 text-xs">
-              {/* Description */}
-              <div>
-                <h4 className="text-slate-400 font-medium uppercase text-[11px] mb-1">Description</h4>
-                <p className="text-slate-200 leading-relaxed bg-space-950 p-3 rounded-lg border border-space-border">
-                  {inspectedDataset.description || 'No description provided.'}
-                </p>
-              </div>
-
-              {/* Scientific Provenance Section */}
-              <div>
-                <h4 className="text-slate-400 font-medium uppercase text-[11px] mb-2 flex items-center gap-1.5">
-                  <FileText className="w-3.5 h-3.5 text-sky-400" /> Scientific Provenance
-                </h4>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-space-950 p-3 rounded-lg border border-space-border">
-                  <div>
-                    <span className="text-slate-500">Source Agency:</span>{' '}
-                    <span className="text-slate-200 font-medium">{inspectedDataset.source_agency || '—'}</span>
-                  </div>
-                  <div>
-                    <span className="text-slate-500">Mission:</span>{' '}
-                    <span className="text-slate-200 font-medium">{inspectedDataset.mission || '—'}</span>
-                  </div>
-                  <div>
-                    <span className="text-slate-500">Instrument / Sensor:</span>{' '}
-                    <span className="text-slate-200 font-medium">{inspectedDataset.instrument || '—'}</span>
-                  </div>
-                  <div>
-                    <span className="text-slate-500">Processing Level:</span>{' '}
-                    <span className="text-slate-200 font-medium">{inspectedDataset.processing_level || '—'}</span>
-                  </div>
-                  <div>
-                    <span className="text-slate-500">License:</span>{' '}
-                    <span className="text-slate-200 font-medium">{inspectedDataset.license || '—'}</span>
-                  </div>
-                  <div>
-                    <span className="text-slate-500">Source URL:</span>{' '}
-                    {inspectedDataset.source_url ? (
-                      <a
-                        href={inspectedDataset.source_url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-sky-400 hover:underline inline-flex items-center gap-1"
-                      >
-                        External Link <ExternalLink className="w-3 h-3" />
-                      </a>
-                    ) : (
-                      <span className="text-slate-400">—</span>
-                    )}
-                  </div>
-                  {inspectedDataset.citation && (
-                    <div className="sm:col-span-2">
-                      <span className="text-slate-500">Citation:</span>{' '}
-                      <span className="text-slate-300 italic">{inspectedDataset.citation}</span>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Technical Specifications */}
-              <div>
-                <h4 className="text-slate-400 font-medium uppercase text-[11px] mb-2 flex items-center gap-1.5">
-                  <Database className="w-3.5 h-3.5 text-sky-400" /> Technical Specifications
-                </h4>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 bg-space-950 p-3 rounded-lg border border-space-border font-mono">
-                  <div>
-                    <span className="text-slate-500 block text-[10px]">VARIABLE</span>
-                    <span className="text-slate-200">{inspectedDataset.variable}</span>
-                  </div>
-                  <div>
-                    <span className="text-slate-500 block text-[10px]">UNIT</span>
-                    <span className="text-slate-200">{inspectedDataset.unit || '—'}</span>
-                  </div>
-                  <div>
-                    <span className="text-slate-500 block text-[10px]">FORMAT</span>
-                    <span className="text-slate-200">{inspectedDataset.format || '—'}</span>
-                  </div>
-                  <div>
-                    <span className="text-slate-500 block text-[10px]">RESOLUTION</span>
-                    <span className="text-slate-200">{inspectedDataset.native_resolution || '—'}</span>
-                  </div>
-                  <div>
-                    <span className="text-slate-500 block text-[10px]">TEMPORAL RANGE</span>
-                    <span className="text-slate-200">
-                      {inspectedDataset.temporal_start || inspectedDataset.temporal_end
-                        ? `${inspectedDataset.temporal_start || 'Start'} to ${inspectedDataset.temporal_end || 'Present'}`
-                        : 'Static'}
-                    </span>
-                  </div>
-                  <div>
-                    <span className="text-slate-500 block text-[10px]">STATUS</span>
-                    <span className="text-emerald-400 capitalize">{inspectedDataset.ingestion_status}</span>
-                  </div>
-                  <div className="col-span-2 sm:col-span-3">
-                    <span className="text-slate-500 block text-[10px]">LOCAL RELATIVE PATH (NO MACHINE ABSOLUTES)</span>
-                    <span className="text-slate-300 break-all">{inspectedDataset.local_path || 'Not stored locally'}</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Related Layers */}
-              <div>
-                <h4 className="text-slate-400 font-medium uppercase text-[11px] mb-2 flex items-center gap-1.5">
-                  <Layers className="w-3.5 h-3.5 text-sky-400" /> Associated Map Layers
-                </h4>
-                {loadingLayers ? (
-                  <p className="text-slate-500 italic">Querying associated layers...</p>
-                ) : datasetLayers.length === 0 ? (
-                  <p className="text-slate-500 bg-space-950 p-3 rounded-lg border border-space-border">
-                    No active map layer views registered for this dataset yet.
-                  </p>
-                ) : (
-                  <div className="space-y-2">
-                    {datasetLayers.map((layer) => (
-                      <div
-                        key={layer.id}
-                        className="flex items-center justify-between p-3 rounded-lg bg-space-950 border border-space-border"
-                      >
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <span className="text-slate-200 font-medium">{layer.name}</span>
-                            <span className="text-[10px] font-mono uppercase px-1.5 py-0.5 rounded bg-space-800 text-slate-400">
-                              {layer.rendering_type}
-                            </span>
-                          </div>
-                          <span className="text-[11px] text-slate-400">{layer.description || 'Layer view'}</span>
-                        </div>
-                        <span
-                          className={`text-xs font-mono px-2 py-0.5 rounded ${
-                            layer.available
-                              ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                              : 'bg-slate-800 text-slate-500 border border-slate-700'
-                          }`}
-                        >
-                          {layer.available ? 'Ready' : 'Not Renderable'}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div className="mt-6 pt-4 border-t border-space-border flex justify-end">
-              <button
-                onClick={closeInspector}
-                className="px-4 py-2 rounded-lg bg-space-800 hover:bg-space-700 text-slate-200 text-xs font-medium transition-colors"
-              >
-                Close Inspector
-              </button>
-            </div>
+            )}
           </div>
+
+          {/* Render Active View Mode */}
+          {viewMode === 'grid' ? (
+            <DatasetGridView
+              datasets={filteredDatasets}
+              onSelectDataset={setInspectedDataset}
+              selectedCompareIds={selectedCompareIds}
+              onToggleCompare={handleToggleCompare}
+            />
+          ) : (
+            <DatasetListView
+              datasets={filteredDatasets}
+              onSelectDataset={setInspectedDataset}
+              selectedCompareIds={selectedCompareIds}
+              onToggleCompare={handleToggleCompare}
+            />
+          )}
         </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* 5. Dataset Detail Inspector Drawer                                        */}
+      {/* ========================================================================= */}
+      <DatasetDetailDrawer
+        dataset={inspectedDataset}
+        onClose={() => setInspectedDataset(null)}
+        isSelectedForCompare={
+          inspectedDataset ? selectedCompareIds.includes(inspectedDataset.id) : false
+        }
+        onToggleCompare={(ds) => handleToggleCompare(ds)}
+      />
+
+      {/* ========================================================================= */}
+      {/* 6. Multi-Dataset Comparison Modal                                         */}
+      {/* ========================================================================= */}
+      {isComparisonOpen && (
+        <DatasetComparisonModal
+          selectedDatasets={compareDatasets}
+          onClose={() => setIsComparisonOpen(false)}
+          onRemoveDataset={handleRemoveCompare}
+          onClearAll={handleClearCompare}
+        />
       )}
     </div>
   );
