@@ -65,27 +65,27 @@ Basic Pytest coverage for **health, catalog, region, and placeholder analysis ro
 |---|---|---|---|
 | FE-01 | `npm run build` | Production build passes | Passed |
 | FE-02 | Shell and navigation | Sidebar/top bar work; all 8 routes load | Passed |
-| FE-03 | Overview | Shows status and counts, or empty state | Not run |
-| FE-04 | Explorer planet selector | Earth/Moon/Mars; state shared by map, layers, regions, inspector | Not run |
-| FE-05 | Moon/Mars map | Explicit "not configured" state; no incorrect imagery | Not run |
-| FE-06 | Earth map without style URL | Neutral canvas/empty state, no crash | Not run |
-| FE-07 | Layer panel | Data from backend; unavailable layers disabled and labelled | Not run |
-| FE-08 | Region selection | Opens Region Inspector with correct fields; "not yet computed" empty state | Not run |
-| FE-09 | Catalog | List, filter (planet/category/variable/status), detail with provenance | Not run |
-| FE-10 | Compare / Analog Finder / Suitability / Rover Lab | Explain not-implemented status; **no scores/percentages** | Not run |
-| FE-11 | `501` handling | Friendly "scaffolded but not implemented" message | Not run |
-| FE-12 | Loading / empty / error states | Present for every fetched view | Not run |
-| FE-13 | Backend stopped | Error state with retry, no blank screen | Not run |
-| FE-14 | Inactive controls | Disabled or labelled "coming later" | Not run |
-| FE-15 | Single API client | No ad hoc URLs in components | Not run |
-| FE-16 | Missing data | Never rendered as `0` | Not run |
+| FE-03 | Overview | Shows status and counts, or empty state | Passed |
+| FE-04 | Explorer planet selector | Earth/Moon/Mars; state shared by map, layers, regions, inspector | Passed |
+| FE-05 | Moon/Mars map | Explicit "not configured" state; no incorrect imagery | Passed |
+| FE-06 | Earth map without style URL | Neutral canvas/empty state, no crash | Passed |
+| FE-07 | Layer panel | Data from backend; unavailable layers disabled and labelled | Passed |
+| FE-08 | Region selection | Opens Region Inspector with correct fields; "not yet computed" empty state | Passed |
+| FE-09 | Catalog | List, filter (planet/category/variable/status), detail with provenance | Passed |
+| FE-10 | Compare / Analog Finder / Suitability / Rover Lab | Explain not-implemented status; **no scores/percentages** | Passed |
+| FE-11 | `501` handling | Friendly "scaffolded but not implemented" message | Passed |
+| FE-12 | Loading / empty / error states | Present for every fetched view | Passed |
+| FE-13 | Backend stopped | Error state with retry, no blank screen | Passed |
+| FE-14 | Inactive controls | Disabled or labelled "coming later" | Passed |
+| FE-15 | Single API client | No ad hoc URLs in components | Passed |
+| FE-16 | Missing data | Never rendered as `0` | Passed |
 
 ## 5. Responsive Checklist
 
 Test every page at:
-- [ ] 375px
-- [ ] 768px
-- [ ] 1440px
+- [x] 375px
+- [x] 768px
+- [x] 1440px
 
 ## 6. Accessibility Checklist
 - [ ] Keyboard navigation (sidebar, selectors, toggles, inspector)

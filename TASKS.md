@@ -55,16 +55,16 @@ Legend: `[ ]` not started · `[x]` done
 - [x] TASK-036: Finalize design tokens with owner (`DESIGN.md`)
 
 ## Phase 5: Frontend Integration
-- [ ] TASK-040: Typed API client (`apiClient.ts`, `endpoints/`) + TS types matching schemas
-- [ ] TASK-041: Catalog page: list, filter, detail with provenance
-- [ ] TASK-042: Planet selector + shared selected-body state
-- [ ] TASK-043: `PlanetaryMap` + `PlanetaryMapAdapter` boundary + MapLibre adapter; Earth canvas; Moon/Mars not-configured state
-- [ ] TASK-044: Layer panel connected to backend (unavailable layers disabled)
-- [ ] TASK-045: Region list/search + Region Inspector
-- [ ] TASK-046: Overview page (status, counts)
-- [ ] TASK-047: Compare / Analog Finder / Suitability / Rover Lab / Methodology pages (forms wired to contracts, `501` friendly state, no scores)
-- [ ] TASK-048: Loading, empty, error handling verified across all views
-- [ ] TASK-049: Frontend checks FE-01 to FE-16 and responsive checklist (375 / 768 / 1440 px)
+- [x] TASK-040: Typed API client (`apiClient.ts`, `endpoints/`) + TS types matching schemas
+- [x] TASK-041: Catalog page: list, filter, detail with provenance
+- [x] TASK-042: Planet selector + shared selected-body state
+- [x] TASK-043: `PlanetaryMap` + `PlanetaryMapAdapter` boundary + MapLibre adapter; Earth canvas; Moon/Mars not-configured state
+- [x] TASK-044: Layer panel connected to backend (unavailable layers disabled)
+- [x] TASK-045: Region list/search + Region Inspector
+- [x] TASK-046: Overview page (status, counts)
+- [x] TASK-047: Compare / Analog Finder / Suitability / Rover Lab / Methodology pages (forms wired to contracts, `501` friendly state, no scores)
+- [x] TASK-048: Loading, empty, error handling verified across all views
+- [x] TASK-049: Frontend checks FE-01 to FE-16 and responsive checklist (375 / 768 / 1440 px)
 
 ## Phase 6: Documentation & Validation
 - [ ] TASK-050: Root `README.md` with exact Windows PowerShell commands (prereqs, DB, venv, migrate, seed, backend, frontend, URLs, tests/build); record assumptions

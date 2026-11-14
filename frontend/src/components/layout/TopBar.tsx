@@ -1,17 +1,14 @@
 import React from 'react';
 import { Menu, Search, ExternalLink, Shield } from 'lucide-react';
+import { usePlanetaryContext } from '../../app/planetaryContext';
 
 interface TopBarProps {
   onToggleSidebar: () => void;
-  selectedPlanet?: string;
-  onSelectPlanet?: (planet: string) => void;
 }
 
-export const TopBar: React.FC<TopBarProps> = ({
-  onToggleSidebar,
-  selectedPlanet = 'earth',
-  onSelectPlanet,
-}) => {
+export const TopBar: React.FC<TopBarProps> = ({ onToggleSidebar }) => {
+  const { selectedPlanet, setSelectedPlanet, planets } = usePlanetaryContext();
+
   return (
     <header className="h-16 bg-space-900 border-b border-space-border px-4 lg:px-8 flex items-center justify-between sticky top-0 z-20">
       <div className="flex items-center gap-4 flex-1">
@@ -37,24 +34,26 @@ export const TopBar: React.FC<TopBarProps> = ({
 
       <div className="flex items-center gap-4">
         {/* Planetary Body Selector Pill */}
-        <div className="flex items-center bg-space-950 p-1 rounded-lg border border-space-border text-xs">
-          {['earth', 'moon', 'mars'].map((planet) => {
-            const isSelected = selectedPlanet.toLowerCase() === planet;
+        <div className="flex items-center bg-space-950 p-1 rounded-lg border border-space-border text-xs" role="group" aria-label="Target Planetary Body Selector">
+          {planets.map((planet) => {
+            const isSelected = selectedPlanet.toLowerCase() === planet.id.toLowerCase();
             return (
               <button
-                key={planet}
-                onClick={() => onSelectPlanet?.(planet)}
+                key={planet.id}
+                type="button"
+                onClick={() => setSelectedPlanet(planet.id)}
+                aria-pressed={isSelected}
                 className={`px-3 py-1 rounded-md font-medium capitalize transition-all ${
                   isSelected
-                    ? planet === 'earth'
+                    ? planet.id === 'earth'
                       ? 'bg-sky-500/20 text-sky-300 border border-sky-500/40 shadow-sm'
-                      : planet === 'moon'
+                      : planet.id === 'moon'
                       ? 'bg-slate-300/20 text-slate-200 border border-slate-400/40 shadow-sm'
                       : 'bg-orange-500/20 text-orange-300 border border-orange-500/40 shadow-sm'
                     : 'text-slate-400 hover:text-slate-200'
                 }`}
               >
-                {planet}
+                {planet.name}
               </button>
             );
           })}
