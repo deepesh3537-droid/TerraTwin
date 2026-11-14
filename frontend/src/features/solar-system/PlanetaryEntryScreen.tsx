@@ -87,8 +87,8 @@ export const PlanetaryEntryScreen: React.FC<PlanetaryEntryScreenProps> = ({ onEn
         <span className="text-sky-400">J2000.0 REFERENCE</span>
       </div>
 
-      {/* Main Cinematic Hero Text & Primary Action Button */}
-      <div className="absolute left-6 bottom-16 sm:left-12 sm:bottom-20 z-20 max-w-xl">
+      {/* Main Cinematic Hero Text & Primary Action Button (Centered on Left Side) */}
+      <div className="absolute left-6 sm:left-12 lg:left-16 top-1/2 -translate-y-1/2 z-20 max-w-xl pointer-events-auto">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-mono mb-4 backdrop-blur-md">
           <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
           <span>Terrestrial Analog Atlas & Characterization</span>
