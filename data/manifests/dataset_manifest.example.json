@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "TerraTwin Dataset Manifest Example",
+  "description": "Example manifest illustrating metadata structure for raw/processed dataset registration per ARCHITECTURE.md §6 and dataset-registration workflow.",
+  "dataset": {
+    "id": "demo-dataset-manifest-001",
+    "name": "Demo Elevation Model Manifest",
+    "description": "Example dataset manifest for terrain elevation grid specification.",
+    "planet_id": "earth",
+    "category": "terrain_elevation",
+    "variable": "elevation",
+    "source_agency": "USGS",
+    "mission": "3DEP",
+    "instrument": "Lidar",
+    "format": "GeoTIFF",
+    "unit": "meters",
+    "native_resolution": "10m",
+    "temporal_start": "2020-01-01T00:00:00Z",
+    "temporal_end": "2020-12-31T23:59:59Z",
+    "coordinate_reference_system": "EPSG:4326",
+    "processing_level": "Level 3",
+    "license": "Public Domain (USGS Open Data)",
+    "source_url": "https://example.gov/datasets/3dep-demo",
+    "citation": "U.S. Geological Survey, 3DEP Elevation Product (Demo Reference).",
+    "local_path": "samples/demo_elevation.tif",
+    "checksum": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "ingestion_status": "registered",
+    "quality_notes": "Example demonstration fixture metadata; not real telemetry data.",
+    "is_demo": true
+  }
+}
