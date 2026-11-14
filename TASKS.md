@@ -14,13 +14,13 @@ Legend: `[ ]` not started · `[x]` done
 - [x] TASK-000b: Decide docs filename convention (`ARCHITECTURE.md` vs `architecture.md`) and whether to generate the 4 extra required docs
 
 ## Phase 1: Repository Skeleton & Configuration
-- [ ] TASK-001: Create `frontend/`, `backend/`, `docs/`, `data/` folders per `ARCHITECTURE.md`
-- [ ] TASK-002: Create `.gitignore` (env files, venvs, node_modules, build output, data dirs except `.gitkeep`)
-- [ ] TASK-003: Create `.env.example` (backend + frontend variables, safe local defaults)
-- [ ] TASK-004: Create `docker-compose.yml` for PostgreSQL + PostGIS (local dev password, documented)
-- [ ] TASK-005: Create `data/{raw,processed,samples,manifests}` with `.gitkeep` and manifest example
-- [ ] TASK-006: Initialize Git and make first commit
-- [ ] TASK-007: Verify PostGIS container starts
+- [x] TASK-001: Create `frontend/`, `backend/`, `docs/`, `data/` folders per `ARCHITECTURE.md`
+- [x] TASK-002: Create `.gitignore` (env files, venvs, node_modules, build output, data dirs except `.gitkeep`)
+- [x] TASK-003: Create `.env.example` (backend + frontend variables, safe local defaults)
+- [x] TASK-004: Create `docker-compose.yml` for PostgreSQL + PostGIS (local dev password, documented)
+- [x] TASK-005: Create `data/{raw,processed,samples,manifests}` with `.gitkeep` and manifest example
+- [x] TASK-006: Initialize Git and make first commit
+- [ ] TASK-007: Verify PostGIS container starts (Docker Desktop not installed on host)
 
 ## Phase 2: Backend Foundation
 - [ ] TASK-010: Decide dependency approach (pyproject vs requirements) and record in `DECISIONS.md`
