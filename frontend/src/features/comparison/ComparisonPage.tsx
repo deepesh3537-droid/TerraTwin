@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import {
   ArrowRightLeft,
   Link2,
@@ -65,6 +66,8 @@ export const ComparisonPage: React.FC = () => {
     );
   }, [candidateRegions, candidateRegionId, regions]);
 
+  const [searchParams] = useSearchParams();
+
   // Load regions from API on mount
   useEffect(() => {
     setLoadingRegions(true);
@@ -76,13 +79,20 @@ export const ComparisonPage: React.FC = () => {
         const extraterrestrial = items.filter((r) => r.planet_id.toLowerCase() !== 'earth');
         const terrestrial = items.filter((r) => r.planet_id.toLowerCase() === 'earth');
 
-        if (extraterrestrial.length > 0) {
+        const urlRef = searchParams.get('ref');
+        const urlCand = searchParams.get('cand');
+
+        if (urlRef && items.some((r) => r.id === urlRef)) {
+          setReferenceRegionId(urlRef);
+        } else if (extraterrestrial.length > 0) {
           setReferenceRegionId(extraterrestrial[0].id);
         } else if (items.length > 0) {
           setReferenceRegionId(items[0].id);
         }
 
-        if (terrestrial.length > 0) {
+        if (urlCand && items.some((r) => r.id === urlCand)) {
+          setCandidateRegionId(urlCand);
+        } else if (terrestrial.length > 0) {
           setCandidateRegionId(terrestrial[0].id);
         } else if (items.length > 1) {
           setCandidateRegionId(items[1].id);
@@ -92,7 +102,7 @@ export const ComparisonPage: React.FC = () => {
       .finally(() => {
         setLoadingRegions(false);
       });
-  }, []);
+  }, [searchParams]);
 
   const handleToggleVariable = (v: string) => {
     setSelectedVariables((prev) =>
