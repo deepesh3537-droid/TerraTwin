@@ -264,3 +264,53 @@ export function getMarsTexture(): THREE.CanvasTexture {
   textureCache.mars = texture;
   return texture;
 }
+
+
+/**
+ * Procedural Earth Cloud layer texture for separate rotating atmosphere
+ */
+export function getEarthCloudTexture(): THREE.CanvasTexture {
+  if (textureCache.earthClouds) return textureCache.earthClouds;
+
+  const width = 1024;
+  const height = 512;
+  const canvas = document.createElement('canvas');
+  canvas.width = width;
+  canvas.height = height;
+  const ctx = canvas.getContext('2d')!;
+
+  ctx.clearRect(0, 0, width, height);
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+
+  // Swirling weather cyclonic cloud systems
+  for (let i = 0; i < 60; i++) {
+    const cx = Math.random() * width;
+    const cy = Math.random() * (height - 60) + 30;
+    const crx = Math.random() * 120 + 40;
+    const cry = Math.random() * 25 + 8;
+    const angle = (Math.random() - 0.5) * 0.4;
+
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(angle);
+    ctx.beginPath();
+    ctx.ellipse(0, 0, crx, cry, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Spiral wisp arms
+    for (let k = 0; k < 6; k++) {
+      const armAngle = (k / 6) * Math.PI * 2;
+      const ax = Math.cos(armAngle) * (crx * 0.8);
+      const ay = Math.sin(armAngle) * (cry * 1.5);
+      ctx.beginPath();
+      ctx.arc(ax, ay, Math.random() * 18 + 6, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.wrapS = THREE.RepeatWrapping;
+  textureCache.earthClouds = texture;
+  return texture;
+}

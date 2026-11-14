@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Layers, MapPin, Eye, Search, RefreshCw } from 'lucide-react';
 import { Layer, Region } from '../../types';
 import { getLayers, getRegions } from '../../services';
-import { PlanetaryMap } from '../../map';
+import { PlanetaryGlobe } from '../globe';
 import { RegionInspector } from './RegionInspector';
 import { usePlanetaryContext } from '../../app/planetaryContext';
 
@@ -228,12 +228,14 @@ export const ExplorerPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Center: Planetary Map Canvas Workspace (TASK-043) */}
+      {/* Center: Planetary 3D Mission Globe & GIS Workspace */}
       <div className="flex-1 min-h-[480px] flex flex-col">
-        <PlanetaryMap
+        <PlanetaryGlobe
           planet={selectedPlanet}
+          regions={filteredRegions}
           selectedRegion={selectedRegion}
           activeLayers={activeLayers}
+          onSelectRegion={(reg) => setSelectedRegion(reg)}
         />
       </div>
 
