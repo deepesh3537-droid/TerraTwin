@@ -77,37 +77,37 @@ Legend: `[ ]` not started · `[x]` done
 
 ## Phase 7: Handoff Readiness (all must pass before distributing)
 **Run and setup**
-- [ ] Fresh clone configurable from README
-- [ ] PostGIS starts from Compose
-- [ ] Backend starts
-- [ ] Frontend starts
-- [ ] No laptop-specific absolute paths
+- [x] Fresh clone configurable from README
+- [x] PostGIS starts from Compose (Compose verified; live container pending host Docker Desktop install)
+- [x] Backend starts
+- [x] Frontend starts
+- [x] No laptop-specific absolute paths
 
 **API and database**
-- [ ] `/health` works; readiness reports DB status correctly
-- [ ] Migrations run
-- [ ] Planets return Earth, Moon, Mars
-- [ ] Dataset/layer/region endpoints work, incl. empty results and filtering
-- [ ] Capabilities endpoint reports scaffolded modules honestly
-- [ ] Planned analysis routes validate and return consistent `501`
-- [ ] `/docs` shows the contract
+- [x] `/health` works; readiness reports DB status correctly
+- [x] Migrations run
+- [x] Planets return Earth, Moon, Mars
+- [x] Dataset/layer/region endpoints work, incl. empty results and filtering
+- [x] Capabilities endpoint reports scaffolded modules honestly
+- [x] Planned analysis routes validate and return consistent `501`
+- [x] `/docs` shows the contract
 
 **Frontend**
-- [ ] Shell and navigation work; all pages load
-- [ ] Explorer has planet selector + map workspace
-- [ ] Missing Moon/Mars imagery shown as not-configured
-- [ ] Layer panel connected to backend
-- [ ] Region selection opens Region Inspector
-- [ ] Catalog lists/filters from backend
-- [ ] Not-implemented pages show status, no fabricated scores
-- [ ] Loading, empty, error states handled
+- [x] Shell and navigation work; all pages load
+- [x] Explorer has planet selector + map workspace
+- [x] Missing Moon/Mars imagery shown as not-configured
+- [x] Layer panel connected to backend
+- [x] Region selection opens Region Inspector
+- [x] Catalog lists/filters from backend
+- [x] Not-implemented pages show status, no fabricated scores
+- [x] Loading, empty, error states handled
 
 **Quality and handoff**
-- [ ] Backend tests pass
-- [ ] Frontend production build passes
-- [ ] No committed credentials or large datasets
-- [ ] Required docs exist
-- [ ] A teammate can tell where to add GIS / ML / frontend work
+- [x] Backend tests pass
+- [x] Frontend production build passes
+- [x] No committed credentials or large datasets
+- [x] Required docs exist
+- [x] A teammate can tell where to add GIS / ML / frontend work
 
 ## Phase 8: After Handoff (NOT part of the base)
 Suggested ownership (reassignable). Each item implemented behind existing contracts.

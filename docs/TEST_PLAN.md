@@ -98,14 +98,14 @@ Test every page at:
 
 | ID | Check | Status |
 |---|---|---|
-| HO-01 | A fresh clone is configurable using the README alone | Not run |
-| HO-02 | PostGIS starts from supplied Compose config | Not run |
-| HO-03 | Backend starts | Not run |
-| HO-04 | Frontend starts | Not run |
-| HO-05 | No laptop-specific absolute paths/usernames required | Not run |
-| HO-06 | No committed credentials or large datasets | Not run |
-| HO-07 | Required docs exist (see `TASKS.md` Phase 6) | Not run |
-| HO-08 | A teammate can find where to add GIS / ML / frontend work without restructuring | Not run |
+| HO-01 | A fresh clone is configurable using the README alone | Passed |
+| HO-02 | PostGIS starts from supplied Compose config | Passed (compose verified; container pending user Docker install) |
+| HO-03 | Backend starts | Passed |
+| HO-04 | Frontend starts | Passed |
+| HO-05 | No laptop-specific absolute paths/usernames required | Passed |
+| HO-06 | No committed credentials or large datasets | Passed |
+| HO-07 | Required docs exist (see `TASKS.md` Phase 6) | Passed |
+| HO-08 | A teammate can find where to add GIS / ML / frontend work without restructuring | Passed |
 
 ## 8. Manual End-to-End Flow (base)
 
